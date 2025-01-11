@@ -1,4 +1,4 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 
 
@@ -34,6 +34,7 @@ const Specialist = async () => {
                             borderRadius: "10px",
                             textAlign: "center",
                             padding: "40px 10px",
+                            transition: "border 0.3s ease",
                             "& img": {
                                 width: '50px',
                                 height: '50px',
@@ -52,6 +53,9 @@ const Specialist = async () => {
                         </Box>
                     ))}
                 </Stack>
+                <Button variant="outlined" sx={{
+                    marginTop: "5px"
+                }}> View All</Button>
             </Box>
         </Container >
     );
