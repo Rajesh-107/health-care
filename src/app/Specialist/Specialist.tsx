@@ -19,7 +19,7 @@ const Specialist = async () => {
 
             }}>
                 <Box sx={{
-                    textAlign: "start",
+                    textAlign: "center",
                 }}>
                     <Typography variant="h4" fontWeight={600}>Explore Treatment Across Specialties</Typography>
                     <Typography component="p" fontSize={18} fontWeight={300}>Lorem ipsum dolor sit, amet consectetur adipisicing.</Typography>
