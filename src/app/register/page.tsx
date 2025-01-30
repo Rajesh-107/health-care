@@ -1,16 +1,28 @@
+"use client"
 import assets from '@/assets';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from "react-hook-form";
-type Inputs = {
-    example: string,
-    exampleRequired: string,
-};
+
+
+interface IPatientData {
+    name: string,
+
+    email: string,
+    contactNumber: string,
+    address: string,
+
+}
+
+interface IPatientRegisterFormData {
+    password: string,
+    patient: IPatientData
+}
 
 const Register = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<IPatientRegisterFormData>();
+    const onSubmit: SubmitHandler<IPatientRegisterFormData> = data => console.log(data);
     return (
         <Container >
             <Stack sx={{
@@ -43,23 +55,26 @@ const Register = () => {
                         <Box>
                             <Grid container spacing={3} my={1}>
                                 <Grid item md={12}>
-                                    <TextField id="outlined-basic" label="Name" variant="outlined" size='small' fullWidth={true} />
+                                    <TextField id="outlined-basic" label="Name" variant="outlined" size='small' fullWidth={true}
+                                        {...register('patient.name')}
+                                    />
 
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField id="outlined-basic" label="email" type="email" variant="outlined" size='small' fullWidth={true} />
+                                    <TextField id="outlined-basic" label="email" type="email" variant="outlined" size='small' fullWidth={true}
+                                        {...register('patient.email')} />
 
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField id="outlined-basic" label="password" type="password" variant="outlined" size='small' fullWidth={true} />
+                                    <TextField id="outlined-basic" label="password" type="password" variant="outlined" size='small' fullWidth={true}    {...register('password')} />
 
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField id="outlined-basic" label="Contact Number" type="phone" variant="outlined" size='small' fullWidth={true} />
+                                    <TextField id="outlined-basic" label="Contact Number" type="phone" variant="outlined" size='small' fullWidth={true}  {...register('patient.contactNumber')} />
 
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField id="outlined-basic" label="Address" type="text" variant="outlined" size='small' fullWidth={true} />
+                                    <TextField id="outlined-basic" label="Address" type="text" variant="outlined" size='small' fullWidth={true} {...register('patient.address')} />
 
                                 </Grid>
                             </Grid>
