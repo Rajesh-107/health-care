@@ -1,6 +1,7 @@
 "use client"
 import assets from '@/assets';
-import { modifyPayLoad } from '@/utils/modifyPayload';
+import { registerPatient } from '@/services/actions/registerPatient';
+import { modifyPayload } from '@/utils/modifyPayload';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,10 +24,17 @@ interface IPatientRegisterFormData {
 
 const Register = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<IPatientRegisterFormData>();
-    const onSubmit: SubmitHandler<IPatientRegisterFormData> = values => {
-        const data = modifyPayLoad(values)
+    const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (values) => {
+        const data = modifyPayload(values)
 
         console.log(data)
+        try {
+            const res = await registerPatient(data)
+            console.log(res)
+        } catch (err: any) {
+            console.error(err.message)
+        }
+
 
     }
     return (
@@ -84,10 +92,15 @@ const Register = () => {
 
                                 </Grid>
                             </Grid>
-                            <Button sx={{
-                                margin: "10px 0",
-                                backgroundColor: "violet"
-                            }} fullWidth={true}>Register</Button>
+                            <Button
+                                sx={{
+                                    margin: "10px 0px",
+                                }}
+                                fullWidth={true}
+                                type="submit"
+                            >
+                                Register
+                            </Button>
                             <Typography component='p' fontWeight={300}>
                                 Do you already have an account? <Link href="/login">Login </Link>
                             </Typography>
