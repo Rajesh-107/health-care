@@ -1,5 +1,6 @@
 "use client"
 import assets from '@/assets';
+import { modifyPayLoad } from '@/utils/modifyPayload';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,7 +23,12 @@ interface IPatientRegisterFormData {
 
 const Register = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm<IPatientRegisterFormData>();
-    const onSubmit: SubmitHandler<IPatientRegisterFormData> = data => console.log(data);
+    const onSubmit: SubmitHandler<IPatientRegisterFormData> = values => {
+        const data = modifyPayLoad(values)
+
+        console.log(data)
+
+    }
     return (
         <Container >
             <Stack sx={{
