@@ -1,15 +1,45 @@
+"use client"
 import assets from '@/assets';
+import { storeUserInfo } from '@/services/actions/auth.service';
+import { loginPatient } from '@/services/actions/userLogin';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from 'sonner';
 
-type Inputs = {
-    example: string,
-    exampleRequired: string,
+export type FormValues = {
+    email: string,
+    password: string,
 };
 const Login = () => {
+    const router = useRouter()
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>()
+    const onSubmit: SubmitHandler<FormValues> = async (values) => {
+
+        try {
+            console.log("Submitting form with values:", values);
+
+            const userInfo = await loginPatient(values);
+            if (userInfo?.success) {
+
+                toast.success(userInfo?.message);
+                storeUserInfo({ accessToken: userInfo?.data?.accessToken })
+                console.log("Login successful:", userInfo);
+
+
+
+            } else {
+                toast.error("Login failed. Please try again."); // Show error toast
+            }
+            console.log("Login successful:", userInfo); // Handle success
+        } catch (err: any) {
+            console.error("Login failed:", err.message); // Handle errors
+        }
+
+    }
     return (
         <Container>
             <Stack
@@ -68,7 +98,7 @@ const Login = () => {
 
                     <Box>
                         <form
-                        // onSubmit={handleLogin}
+                            onSubmit={handleSubmit(onSubmit)}
                         // resolver={zodResolver(validationSchema)}
                         // defaultValues={{
                         //    email: '',
@@ -78,18 +108,20 @@ const Login = () => {
                             <Grid container spacing={2} my={1}>
                                 <Grid item md={6}>
                                     <TextField
-                                        name='email'
+                                        variant='outlined'
                                         label='Email'
                                         type='email'
                                         fullWidth={true}
+                                        {...register("email")}
                                     />
                                 </Grid>
                                 <Grid item md={6}>
                                     <TextField
-                                        name='password'
+                                        variant='outlined'
                                         label='Password'
                                         type='password'
                                         fullWidth={true}
+                                        {...register('password')}
                                     />
                                 </Grid>
                             </Grid>

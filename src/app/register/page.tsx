@@ -5,7 +5,9 @@ import { modifyPayload } from '@/utils/modifyPayload';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from 'sonner';
 
 
 interface IPatientData {
@@ -23,6 +25,7 @@ interface IPatientRegisterFormData {
 }
 
 const Register = () => {
+    const router = useRouter()
     const { register, handleSubmit, watch, formState: { errors } } = useForm<IPatientRegisterFormData>();
     const onSubmit: SubmitHandler<IPatientRegisterFormData> = async (values) => {
         const data = modifyPayload(values)
@@ -30,6 +33,10 @@ const Register = () => {
         console.log(data)
         try {
             const res = await registerPatient(data)
+            if (res?.data?.id) {
+                toast.success(res?.message)
+                router.push('/login')
+            }
             console.log(res)
         } catch (err: any) {
             console.error(err.message)
