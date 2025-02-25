@@ -1,6 +1,8 @@
 "use client"
 import assets from '@/assets';
+import { storeUserInfo } from '@/services/actions/auth.service';
 import { registerPatient } from '@/services/actions/registerPatient';
+import { loginPatient } from '@/services/actions/userLogin';
 import { modifyPayload } from '@/utils/modifyPayload';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
@@ -35,7 +37,16 @@ const Register = () => {
             const res = await registerPatient(data)
             if (res?.data?.id) {
                 toast.success(res?.message)
-                router.push('/login')
+                const userInfo = await loginPatient({ password: values.password, email: values.patient.email });
+                if (userInfo?.success) {
+
+                    toast.success(userInfo?.message);
+                    storeUserInfo({ accessToken: userInfo?.data?.accessToken })
+                    console.log("Login successful:", userInfo);
+                    router.push('/')
+
+
+                }
             }
             console.log(res)
         } catch (err: any) {
