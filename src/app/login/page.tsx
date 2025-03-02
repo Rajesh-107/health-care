@@ -1,5 +1,7 @@
 "use client"
 import assets from '@/assets';
+import PHForm from '@/components/Forms/PHForm';
+import PHInput from '@/components/Forms/PHInput';
 import { storeUserInfo } from '@/services/actions/auth.service';
 import { loginPatient } from '@/services/actions/userLogin';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
@@ -7,17 +9,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { toast } from 'sonner';
 
-export type FormValues = {
-    email: string,
-    password: string,
-};
+// export type FormValues = {
+//     email: string,
+//     password: string,
+// };
 const Login = () => {
     const router = useRouter()
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>()
-    const onSubmit: SubmitHandler<FormValues> = async (values) => {
+    // const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>()
+    const handleLogin = async (values: FieldValues) => {
 
         try {
             console.log("Submitting form with values:", values);
@@ -97,8 +99,8 @@ const Login = () => {
                     {/* )} */}
 
                     <Box>
-                        <form
-                            onSubmit={handleSubmit(onSubmit)}
+                        <PHForm
+                            onSubmit={handleLogin}
                         // resolver={zodResolver(validationSchema)}
                         // defaultValues={{
                         //    email: '',
@@ -107,21 +109,21 @@ const Login = () => {
                         >
                             <Grid container spacing={2} my={1}>
                                 <Grid item md={6}>
-                                    <TextField
-                                        variant='outlined'
+                                    <PHInput
+
                                         label='Email'
                                         type='email'
                                         fullWidth={true}
-                                        {...register("email")}
+                                        name='email'
                                     />
                                 </Grid>
                                 <Grid item md={6}>
-                                    <TextField
-                                        variant='outlined'
+                                    <PHInput
+
                                         label='Password'
                                         type='password'
                                         fullWidth={true}
-                                        {...register('password')}
+                                        name='password'
                                     />
                                 </Grid>
                             </Grid>
@@ -153,7 +155,7 @@ const Login = () => {
                                 Don&apos;t have an account?{' '}
                                 <Link href='/register'>Create an account</Link>
                             </Typography>
-                        </form>
+                        </PHForm>
                     </Box>
                 </Box>
             </Stack>
