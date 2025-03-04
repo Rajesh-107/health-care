@@ -6,12 +6,14 @@ import { storeUserInfo } from '@/services/actions/auth.service';
 import { registerPatient } from '@/services/actions/registerPatient';
 import { loginPatient } from '@/services/actions/userLogin';
 import { modifyPayload } from '@/utils/modifyPayload';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Container, Grid, Stack, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm, FieldValues } from "react-hook-form";
 import { toast } from 'sonner';
+import { z } from 'zod';
 
 
 interface IPatientData {
@@ -27,6 +29,30 @@ interface IPatientRegisterFormData {
     password: string,
     patient: IPatientData
 }
+
+export const patientValidationSchema = z.object({
+    name: z.string().min(1, "Please enter your name!"),
+    email: z.string().email("Please enter a valid email address!"),
+    contactNumber: z
+        .string()
+        .regex(/^\d{11}$/, "Please provide a valid phone number!"),
+    address: z.string().min(1, "Please enter your address!"),
+});
+
+export const validationSchema = z.object({
+    password: z.string().min(6, "Must be at least 6 characters"),
+    patient: patientValidationSchema,
+});
+
+export const defaultValues = {
+    password: "",
+    patient: {
+        name: "",
+        email: "",
+        contactNumber: "",
+        address: "",
+    },
+};
 
 const Register = () => {
     const router = useRouter()
@@ -64,7 +90,10 @@ const Register = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-                <PHForm onSubmit={handleRegister}>
+                <PHForm onSubmit={handleRegister}
+                    resolver={zodResolver(validationSchema)}
+                    defaultValues={defaultValues}
+                >
                     <Box sx={{
                         maxWidth: '600',
                         width: "100%",
