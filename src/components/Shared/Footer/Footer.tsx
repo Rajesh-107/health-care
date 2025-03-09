@@ -20,7 +20,9 @@ const Footer = () => {
                     <Image src={linkedin} width={30} height={30} alt='linkedin' />
                     <Image src={linkedin} width={30} height={30} alt='linkedin' />
                 </Stack>
-                <div className='border-b'></div>
+                <Box sx={{
+                    border: "1px dashed lightgray",
+                }}></Box>
 
                 <Stack direction="row" gap={2} justifyContent="space-between" ph={3}>
                     <Typography component="p" color='white' >&copy; 2025 Health care</Typography>
