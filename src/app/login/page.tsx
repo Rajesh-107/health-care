@@ -37,7 +37,7 @@ const Login = () => {
                 toast.success(userInfo?.message);
                 storeUserInfo({ accessToken: userInfo?.data?.accessToken })
                 console.log("Login successful:", userInfo);
-                router.push('/')
+                router.push('/dashboard')
 
 
             } else {

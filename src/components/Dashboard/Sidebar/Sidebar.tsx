@@ -5,17 +5,27 @@ import assets from "@/assets";
 import Image from "next/image";
 import { drawerItems } from "@/utils/drawerItems";
 import { UserRole } from "@/types";
+import { getUserInfo } from "@/services/actions/auth.service";
+import { useEffect, useState } from "react";
 const Sidebar = () => {
+    const { role } = getUserInfo()
+    const [userRole, setUserRole] = useState("")
+    useEffect(() => {
+        setUserRole(role)
+    }, [])
     const drawer = (
-        <div>
+
+        < div >
             <Toolbar />
             <Divider />
             <List>
-                {drawerItems("admin" as UserRole).map((item, index) => (
+                {drawerItems(userRole as UserRole).map((item, index) => (
                     <ListItem key={index} disablePadding>
                         <ListItemButton>
                             <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                {
+                                    item.icon && <item.icon />
+                                }
                             </ListItemIcon>
                             <ListItemText primary={item.title} />
                         </ListItemButton>
@@ -23,7 +33,7 @@ const Sidebar = () => {
                 ))}
             </List>
 
-        </div>
+        </ div>
     );
     return <Box>
         <Stack direction='row' alignItems='center' justifyContent='center'>

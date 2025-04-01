@@ -71,7 +71,7 @@ const Register = () => {
                     toast.success(userInfo?.message);
                     storeUserInfo({ accessToken: userInfo?.data?.accessToken })
                     console.log("Login successful:", userInfo);
-                    router.push('/')
+                    router.push('/dashboard')
 
 
                 }
