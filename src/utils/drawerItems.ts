@@ -45,8 +45,8 @@ export const drawerItems = (role: UserRole): DrawerItem[] => {
           icon: MedicalInformationIcon,
         },
         {
-          title: "Schedules",
-          path: `${role}/schedules`,
+          title: "Schedule",
+          path: `${role}/schedule`,
           icon: CalendarMonthIcon,
         },
         {
@@ -70,8 +70,8 @@ export const drawerItems = (role: UserRole): DrawerItem[] => {
           icon: DashboardIcon,
         },
         {
-          title: "Schedules",
-          path: `${role}/schedules`,
+          title: "Schedule",
+          path: `${role}/schedule`,
           icon: CalendarMonthIcon,
         },
         {

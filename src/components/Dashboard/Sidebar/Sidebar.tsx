@@ -7,41 +7,49 @@ import { drawerItems } from "@/utils/drawerItems";
 import { UserRole } from "@/types";
 import { getUserInfo } from "@/services/actions/auth.service";
 import { useEffect, useState } from "react";
+import SidebarItem from "./SidebarItem";
+import Link from "next/link";
 const Sidebar = () => {
-    const { role } = getUserInfo()
-    const [userRole, setUserRole] = useState("")
-    useEffect(() => {
-        setUserRole(role)
-    }, [])
-    const drawer = (
+    const [userRole, setUserRole] = useState("");
 
-        < div >
-            <Toolbar />
-            <Divider />
+    useEffect(() => {
+        const { role } = getUserInfo() as any;
+        setUserRole(role);
+    }, []);
+
+    return (
+        <Box>
+            <Stack
+                sx={{
+                    py: 1,
+                    mt: 1,
+                }}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                gap={1}
+                component={Link}
+                href="/"
+            >
+                <Image src={assets.images.arrow} width={40} height={40} alt="logo" />
+                <Typography
+                    variant="h6"
+                    component="h1"
+                    sx={{
+                        cursor: "pointer",
+                    }}
+                >
+                    PH Health Care
+                </Typography>
+            </Stack>
             <List>
                 {drawerItems(userRole as UserRole).map((item, index) => (
-                    <ListItem key={index} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {
-                                    item.icon && <item.icon />
-                                }
-                            </ListItemIcon>
-                            <ListItemText primary={item.title} />
-                        </ListItemButton>
-                    </ListItem>
+                    <SidebarItem key={index} item={item} />
                 ))}
             </List>
-
-        </ div>
+        </Box>
     );
-    return <Box>
-        <Stack direction='row' alignItems='center' justifyContent='center'>
-            <Image src={assets.images.Stetoscope} height={40} width={40} alt="logo" />
-            <Typography component="h1" verient='h6'>Health Care</Typography>
-        </Stack>
-        {drawer}
-    </Box>
 };
+
 
 export default Sidebar;
