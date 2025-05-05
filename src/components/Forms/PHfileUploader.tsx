@@ -16,7 +16,7 @@ type TProps = {
 export default function PHfileUploader({ name, label, sx }: TProps) {
     const { control } = useFormContext()
     return (
-        <Controller name={name} control={control} render={({ field: onChange, value, ...field }) => {
+        <Controller name={name} control={control} render={({ field: { onChange, value, ...field } }) => {
             return (
                 <Button
                     component="label"
@@ -30,6 +30,7 @@ export default function PHfileUploader({ name, label, sx }: TProps) {
                     <Input
                         {...field}
                         type="file"
+                        value={value?.filename}
                         style={{ display: 'none' }}
                         onChange={(e) => onChange((e.target as HTMLInputElement).files?.[0])}
                     />
