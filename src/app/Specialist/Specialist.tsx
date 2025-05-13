@@ -25,7 +25,7 @@ const Specialist = async () => {
                     <Typography component="p" fontSize={18} fontWeight={300}>Lorem ipsum dolor sit, amet consectetur adipisicing.</Typography>
                 </Box>
                 <Stack direction="row" gap={4} mt={5}>
-                    {spe.map((specility: any) => (
+                    {spe.slice(0, 6).map((specility: any) => (
                         <Box key={specility.id} sx={{
                             flex: 1,
                             width: "150px",
