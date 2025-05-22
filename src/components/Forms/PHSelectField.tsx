@@ -11,7 +11,7 @@ interface ITextField {
     required?: boolean;
     fullWidth?: boolean;
     sx?: SxProps;
-    items: string[];
+    items?: string[];
 }
 
 const PHSelectField = ({
@@ -46,7 +46,7 @@ const PHSelectField = ({
                         isError ? (formState.errors[name]?.message as string) : ""
                     }
                 >
-                    {items.map((name) => (
+                    {items?.map((name) => (
                         <MenuItem key={name} value={name}>
                             {name}
                         </MenuItem>

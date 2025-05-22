@@ -3,17 +3,32 @@ import PHForm from "@/components/Forms/PHForm";
 import PHInput from "@/components/Forms/PHInput";
 import PHSelectField from "@/components/Forms/PHSelectField";
 import PHFullScreenModal from "@/components/Shared/PhModal/PHFullScreenModal";
+import { useCreateDoctorMutation } from "@/redux/api/doctorAPI";
+import { Gender } from "@/types";
+import { modifyPayload } from "@/utils/modifyPayload";
 import { Button, Grid } from "@mui/material";
 import { FieldValues } from "react-hook-form";
+import { toast } from "sonner";
 type TProps = {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DoctorModal = ({ open, setOpen }: TProps) => {
-    // const [createDoctor] = useCreateDoctorMutation();
+    const [createDoctor] = useCreateDoctorMutation();
     const handleFormSubmit = async (values: FieldValues) => {
-        console.log(values);
+        values.doctor.experience = Number(values.doctor.experience);
+        values.doctor.apointmentFee = Number(values.doctor.apointmentFee);
+        const data = modifyPayload(values)
+        try {
+            const res = await createDoctor(data).unwrap()
+            if (res?.id) {
+                toast.success("Doctor created successfully")
+                setOpen(false)
+            }
+        } catch (err: any) {
+            console.error(err)
+        }
 
     };
     const defaultValues = {
@@ -101,12 +116,12 @@ const DoctorModal = ({ open, setOpen }: TProps) => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={12} md={4}>
-                        {/* <PHSelectField
-                            // items={gender}
+                        <PHSelectField
+                            items={Gender}
                             name="doctor.gender"
                             label="Gender"
                             sx={{ mb: 2 }}
-                        /> */}
+                        />
                     </Grid>
                     <Grid item xs={12} sm={12} md={4}>
                         <PHInput
