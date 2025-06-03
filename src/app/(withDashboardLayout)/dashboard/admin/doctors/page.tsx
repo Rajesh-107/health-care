@@ -2,8 +2,10 @@
 import { Box, Button, IconButton, Stack, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import DoctorModal from './components/DoctorModal';
-import { useGetAllDoctorsQuery } from '@/redux/api/doctorAPI';
+import { useDeleteDoctorMutation, useGetAllDoctorsQuery } from '@/redux/api/doctorAPI';
 import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid';
+import { useDebounced } from '@/redux/hooks';
+import { toast } from 'sonner';
 
 const Doctors = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -12,17 +14,28 @@ const Doctors = () => {
     query["searchTerm"] = searchTerm
     const { data, isLoading, error } = useGetAllDoctorsQuery({ ...query });
 
-    // const [deleteDoctor] = useDeleteDoctorMutation();
+    const [deleteDoctor] = useDeleteDoctorMutation();
+    const debouncedTerm = useDebounced({ searchQuery: searchTerm, delay: 600 })
+
+    if (!!debouncedTerm) {
+        query['searchTerm'] = searchTerm
+    }
 
 
-
-
-    console.log(data);
+    // console.log(data);
     const doctors = data?.doctors;
     const meta = data?.meta;
-    const handleDelete = (id: string) => {
-        console.log("Delete doctor with id:", id);
+    const handleDelete = async (id: string) => {
+        // console.log("Delete doctor with id:", id);
         // You can call a delete mutation here
+        try {
+            const res = await deleteDoctor(id)
+            if (res?.id) {
+                toast.success("Deleted successfully")
+            }
+        } catch (err: any) {
+            console.error(err.message)
+        }
     };
 
     const columns: GridColDef[] = [

@@ -9,7 +9,7 @@ const page = () => {
     <div>
       <HeroSection />
       <Specialist />
-      <TopRatedDoctors />
+      {/* <TopRatedDoctors /> */}
       <WhyUs />
     </div>
   );

@@ -9,8 +9,8 @@ export const doctorApi = baseAPI.injectEndpoints({
       query: (data) => ({
         url: "/user/create-doctor",
         method: "POST",
-        contentType: "multpart/form-data",
-        data,
+        headers: { "Content-Type": "multipart/form-data" },
+        body: data,
       }),
       invalidatesTags: [tagTypes.doctor],
     }),
@@ -28,7 +28,18 @@ export const doctorApi = baseAPI.injectEndpoints({
       },
       providesTags: [tagTypes.doctor],
     }),
+    deleteDoctor: build.mutation({
+      query: (id) => ({
+        url: `/doctor/soft/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [tagTypes.doctor],
+    }),
   }),
 });
 
-export const { useCreateDoctorMutation, useGetAllDoctorsQuery } = doctorApi;
+export const {
+  useCreateDoctorMutation,
+  useGetAllDoctorsQuery,
+  useDeleteDoctorMutation,
+} = doctorApi;
