@@ -15,6 +15,7 @@ const Doctors = () => {
     const { data, isLoading, error } = useGetAllDoctorsQuery({ ...query });
 
     const [deleteDoctor] = useDeleteDoctorMutation();
+
     const debouncedTerm = useDebounced({ searchQuery: searchTerm, delay: 600 })
 
     if (!!debouncedTerm) {
@@ -29,7 +30,8 @@ const Doctors = () => {
         // console.log("Delete doctor with id:", id);
         // You can call a delete mutation here
         try {
-            const res = await deleteDoctor(id)
+            const res = await deleteDoctor(id).unwrap()
+            console.log(res)
             if (res?.id) {
                 toast.success("Deleted successfully")
             }
