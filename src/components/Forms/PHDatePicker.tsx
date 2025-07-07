@@ -35,6 +35,7 @@ export default function PHDatePicker({
             render={({ field: { onChange, value, ...field }, fieldState }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DesktopDatePicker
+                        label={label}
                         {...field}
                         timezone="system"
                         disablePast
