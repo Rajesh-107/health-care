@@ -6,15 +6,17 @@ import { useEffect, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ISchedule } from '@/types/schedule/index';
-import { useGetAllSchedulesQuery } from '@/redux/api/scheduleApi';
+import { useDeleteScheduleMutation, useGetAllSchedulesQuery } from '@/redux/api/scheduleApi';
 
 import { dateFormatter } from '@/utils/dateFormatter';
 import dayjs from 'dayjs';
+import { toast } from 'sonner';
 
 const SchedulePage = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [allSchedule, setAllSchedule] = useState<any[]>([]);
     const { data, isLoading } = useGetAllSchedulesQuery({});
+    const [deleteSchedule, { isLoading: isDeleting }] = useDeleteScheduleMutation();
 
     const schedules = data?.schedules;
 
@@ -33,7 +35,15 @@ const SchedulePage = () => {
             setAllSchedule(updateData);
         }
     }, [schedules]);
-
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteSchedule(id).unwrap();
+            toast.success("Deleted successfully");
+            setAllSchedule(prev => prev.filter(schedule => schedule.id !== id));
+        } catch (error) {
+            console.error('Failed to delete schedule:', error);
+        }
+    };
     const columns: GridColDef[] = [
         { field: 'sl', headerName: 'SL', width: 70 },
         { field: 'startDate', headerName: 'Date', flex: 1 },
@@ -46,7 +56,11 @@ const SchedulePage = () => {
             headerAlign: 'center',
             align: 'center',
             renderCell: ({ row }) => (
-                <IconButton aria-label="delete">
+                <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDelete(row.id)}
+                    disabled={isDeleting}
+                >
                     <DeleteIcon />
                 </IconButton>
             ),
