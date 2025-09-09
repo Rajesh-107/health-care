@@ -1,4 +1,5 @@
 import { authKey } from "@/constants/authKey";
+import { getNewAccessToken } from "@/services/actions/auth.service";
 import { IGenericErrorResponse, ResponseSuccessType } from "@/types";
 import { getFormLocalStorage } from "@/utils/local-storage";
 import axios from "axios";
@@ -41,12 +42,21 @@ instance.interceptors.response.use(
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+    // Do something with response 
+    const config = error.config 
+    if(error?.response?.status === 500) {
+      const response = await getNewAccessToken()
+      const accessToken = response?.data?.accessToken;
+      config.headers["Authorization"] = accessToken
+      else{
     const responseObject: IGenericErrorResponse = {
       statusCode: error?.response?.data?.statusCode || 500,
       message: error?.response?.data?.message || "Something went wrong",
       errorMessages: error?.response?.data?.message,
-    };
+    }
+        }
+    
+
     // return Promise.reject(error);
     return responseObject;
   }
