@@ -1,7 +1,8 @@
 import { authKey } from "@/constants/authKey";
 import { getNewAccessToken } from "@/services/actions/auth.service";
+import setAccessToken from "@/services/actions/setAccessToken";
 import { IGenericErrorResponse, ResponseSuccessType } from "@/types";
-import { getFormLocalStorage } from "@/utils/local-storage";
+import { getFormLocalStorage, setToLocalStorage } from "@/utils/local-storage";
 import axios from "axios";
 
 const instance = axios.create();
@@ -9,8 +10,6 @@ const instance = axios.create();
 instance.defaults.headers.post["Content-Type"] = "application/json";
 instance.defaults.headers["Accept"] = "application/json";
 instance.defaults.timeout = 60000;
-
-export { instance };
 
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -40,24 +39,27 @@ instance.interceptors.response.use(
     };
     return responseObject;
   },
-  function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response 
-    const config = error.config 
-    if(error?.response?.status === 500) {
-      const response = await getNewAccessToken()
+  async function (error) {
+    const config = error.config;
+    // console.log(config);
+    if (error?.response?.status === 500 && !config.sent) {
+      config.sent = true;
+      const response = await getNewAccessToken();
       const accessToken = response?.data?.accessToken;
-      config.headers["Authorization"] = accessToken
-      else{
-    const responseObject: IGenericErrorResponse = {
-      statusCode: error?.response?.data?.statusCode || 500,
-      message: error?.response?.data?.message || "Something went wrong",
-      errorMessages: error?.response?.data?.message,
+      config.headers["Authorization"] = accessToken;
+      setToLocalStorage(authKey, accessToken);
+      setAccessToken(accessToken);
+      return instance(config);
+    } else {
+      const responseObject: IGenericErrorResponse = {
+        statusCode: error?.response?.data?.statusCode || 500,
+        message: error?.response?.data?.message || "Something went wrong!!!",
+        errorMessages: error?.response?.data?.message,
+      };
+      // return Promise.reject(error);
+      return responseObject;
     }
-        }
-    
-
-    // return Promise.reject(error);
-    return responseObject;
   }
 );
+
+export { instance };

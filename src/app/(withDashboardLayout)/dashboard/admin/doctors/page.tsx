@@ -6,6 +6,7 @@ import { useDeleteDoctorMutation, useGetAllDoctorsQuery } from '@/redux/api/doct
 import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid';
 import { useDebounced } from '@/redux/hooks';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 const Doctors = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -54,9 +55,16 @@ const Doctors = () => {
             align: "center",
             renderCell: ({ row }) => {
                 return (
-                    <IconButton onClick={() => handleDelete(row.id)} aria-label="delete">
-                        Delete
-                    </IconButton>
+                    <div>
+                        <IconButton onClick={() => handleDelete(row.id)} aria-label="delete">
+                            Delete
+                        </IconButton>
+                        <Link href={`/dashboard/admin/doctors/edit/${row.id}`}>
+                            <IconButton aria-label="edit">
+                                Edit
+                            </IconButton>
+                        </Link>
+                    </div>
                 );
             },
         },
